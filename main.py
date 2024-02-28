@@ -7,6 +7,8 @@ import tkinter.font as font
 from functools import partial
 from pyresparser import ResumeParser
 from sklearn import datasets, linear_model 
+import spacy
+spacy.load("en_core_web_sm")
 
 class train_model:
     
@@ -181,8 +183,14 @@ def perdict_person():
     extraversion.insert(0,'1-10')
     extraversion.place(x=450, y=370, width=160)
 
-    submitBtn=Button(top, padx=2, pady=0, text="Submit", bd=0, foreground='white', bg='red', font=(12))
-    submitBtn.config(command=lambda: prediction_result(top,sName,loc,(gender.get(),age.get(),openness.get(),neuroticism.get(),conscientiousness.get(),agreeableness.get(),extraversion.get())))
+    def handle_button_click(event, top, sName, loc, gender, age, openness, neuroticism, conscientiousness, agreeableness, extraversion):
+        try:
+            prediction_result(top, sName, loc, (gender.get(), age.get(), openness.get(), neuroticism.get(), conscientiousness.get(), agreeableness.get(), extraversion.get()))
+        except Exception as e:
+            print("Error:", e)
+
+    submitBtn = Button(top, padx=2, pady=0, text="Submit", bd=0, foreground='white', bg='red', font=(12))
+    submitBtn.bind("<Button-1>", lambda event: handle_button_click(event, top, sName, loc, gender, age, openness, neuroticism, conscientiousness, agreeableness, extraversion))
     submitBtn.place(x=350, y=400, width=200)
     
 
